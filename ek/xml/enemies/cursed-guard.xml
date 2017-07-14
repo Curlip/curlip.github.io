@@ -124,11 +124,11 @@
     </Projectile>
 
     <Behavior map="guard/guardEncounter.jm">PlaceMap</Behavior>
-    <Behaviour>OryxTaunt</Behaviour>
+    <Behavior>OryxTaunt</Behavior>
 
     <!-- Decide Path -->
     <State id="Ini">
-        <Behaviour altTextureId="1">SetAltTexture</Behaviour>
+        <Behavior altTextureId="1">SetAltTexture</Behavior>
         <Transition random="1">pathAngry,pathCalm</Transition>
     </State>
 
@@ -138,7 +138,7 @@
         </State>
         <State id="raise">
             <Behavior maxSize="140" rate="14">ChangeSize</Behavior>
-            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior altTextureId="2">SetAltTexture</Behavior>
             <Behavior effect="Invulnerable">ConditionEffect</Behavior>
             <Embed name="radialBombs"></Embed>
             <Embed name="radialPara">
@@ -180,7 +180,7 @@
         </State>
         <State id="raise">
             <Behavior maxSize="140" rate="28">ChangeSize</Behavior>
-            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior altTextureId="2">SetAltTexture</Behavior>
             <Behavior effect="Invulnerable">ConditionEffect</Behavior>
             <Embed name="radialBombs"></Embed>
             <Embed name="radialPara"></Embed>

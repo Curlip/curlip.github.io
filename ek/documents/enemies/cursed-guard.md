@@ -241,11 +241,11 @@ Also drops portal to "Elemental Kingdom"
     </Projectile>
 
     <Behavior map="guard/guardEncounter.jm">PlaceMap</Behavior>
-    <Behaviour>OryxTaunt</Behaviour>
+    <Behavior>OryxTaunt</Behavior>
 
     <!-- Decide Path -->
     <State id="Ini">
-        <Behaviour altTextureId="1">SetAltTexture</Behaviour>
+        <Behavior altTextureId="1">SetAltTexture</Behavior>
         <Transition random="1">pathAngry,pathCalm</Transition>
     </State>
 
@@ -255,7 +255,7 @@ Also drops portal to "Elemental Kingdom"
         </State>
         <State id="raise">
             <Behavior maxSize="140" rate="14">ChangeSize</Behavior>
-            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior altTextureId="2">SetAltTexture</Behavior>
             <Behavior effect="Invulnerable">ConditionEffect</Behavior>
             <Embed name="radialBombs"></Embed>
             <Embed name="radialPara">
@@ -297,7 +297,7 @@ Also drops portal to "Elemental Kingdom"
         </State>
         <State id="raise">
             <Behavior maxSize="140" rate="28">ChangeSize</Behavior>
-            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior altTextureId="2">SetAltTexture</Behavior>
             <Behavior effect="Invulnerable">ConditionEffect</Behavior>
             <Embed name="radialBombs"></Embed>
             <Embed name="radialPara"></Embed>
@@ -334,7 +334,7 @@ Also drops portal to "Elemental Kingdom"
                 <Param name="cooldown">0.8</Param>
             </Embed>
             <Behavior type="targeted" numShots="5" projectileId="3" cooldown="0.6" angle="9">Shoot</Behavior>
-            <Behavior acquireRange="20" bucket="movement" speed="0.2">Follow</Behavior>
+            <Behavior acquireRange="20" bucket="movement" speed="2">Follow</Behavior>
             <Transition afterTime="15">slashing</Transition>
         </State>
         <State name="slashing">

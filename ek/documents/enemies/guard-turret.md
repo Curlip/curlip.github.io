@@ -88,7 +88,7 @@ In this phase the turrets will chase any player within 20 tiles at an incredible
         <Behavior type="target" numShots="1" projectileId="1" cooldown=".4" predictive="0.6">Shoot</Behavior>
     </State>
     <State id="terminate">
-        <Behaviour>Decay</Behaviour>
+        <Behavior>Decay</Behavior>
     </State>
 </Object>
 ```

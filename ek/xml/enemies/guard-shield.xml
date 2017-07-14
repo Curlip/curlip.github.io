@@ -41,6 +41,6 @@
         <Behavior type="auto" numShots="1"  projectileId="0" cooldown="1" defaultAngle="0">Shoot</Behavior>
     </State>
     <State id="terminate">
-        <Behaviour>Decay</Behaviour>
+        <Behavior>Decay</Behavior>
     </State>
 </Object>

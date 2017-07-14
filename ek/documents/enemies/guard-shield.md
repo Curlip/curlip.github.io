@@ -45,8 +45,8 @@ The only phase of the Guard Shield, in this phase the Shields circle the Guard a
     <Defense>10</Defense>
 
     <AnimatedTexture>
-        <File>curlip8</File>
-        <Index>0x02</Index>
+        <File>FIX</File>
+        <Index>FIX</Index>
     </AnimatedTexture>
 
     <!-- Shots -->
@@ -67,7 +67,7 @@ The only phase of the Guard Shield, in this phase the Shields circle the Guard a
         <Behavior type="auto" numShots="1"  projectileId="0" cooldown="1" defaultAngle="0">Shoot</Behavior>
     </State>
     <State id="terminate">
-        <Behaviour>Decay</Behaviour>
+        <Behavior>Decay</Behavior>
     </State>
 </Object>
 ```
