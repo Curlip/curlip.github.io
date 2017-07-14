@@ -1,0 +1,295 @@
+<Object type="FIX" id="ParaSpray">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>100</Size>
+</Object>
+<Object type="FIX" id="MagicSpray">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>100</Size>
+        <AngleCorrection>1</AngleCorrection>
+</Object>
+<Object type="FIX" id="GuardSword">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>130</Size>
+</Object>
+<Object type="FIX" id="GuardShield">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>100</Size>
+        <AngleCorrection>1</AngleCorrection>
+</Object>
+<Object type="FIX" id="GuardShieldB">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>100</Size>
+        <AngleCorrection>1</AngleCorrection>
+</Object>
+
+<Object type="FIX" id="Cursed Guard">
+    <Group>Cursed Guard Encounter</Group>
+
+    <Enemy/>
+    <Class>Character</Class>
+    <Hero/>
+    <God/>
+    <Encounter/>
+    <PerRealmMax>1</PerRealmMax>
+    <KeepDamageRecord/>
+
+    <StasisImmune/>
+
+    <Size>0</Size>
+    <MaxHitPoints>100000</MaxHitPoints>
+    <Defense>60</Defense>
+    <XpMult>0.3</XpMult>
+
+    <AnimatedTexture>
+        <File>FIX</File>
+        <Index>FIX</Index>
+    </AnimatedTexture>
+    <AltTexture id="1">                                                 <!-- Invisble Sprite -->
+        <Texture>
+            <File>invisible</File>
+            <Index>0</Index>
+        </Texture>
+        <!--invisible-->
+    </AltTexture>
+    <AltTexture id="2">                                                 <!-- Rising Animation -->
+        <AnimatedTexture>
+            <File>FIX</File>
+            <Index>FIX</Index>
+        </AnimatedTexture>
+    </AltTexture>
+
+    <!-- Shots -->
+
+    <Projectile id="0">
+        <ObjectId>ParaSpray</ObjectId>
+        <Damage>0</Damage>
+        <Speed>100</Speed>
+        <LifetimeMS>560</LifetimeMS>
+        <MultiHit />
+    </Projectile>
+    <Projectile id="1">
+        <ObjectId>MagicSpray</ObjectId>
+        <Damage>200</Damage>
+        <Speed>100</Speed>
+        <LifetimeMS>800</LifetimeMS>
+        <MultiHit />
+    </Projectile>
+    <Projectile id="2">
+        <ObjectId>GuardDamage</ObjectId>
+        <Damage>250</Damage>
+        <Speed>200</Speed>
+        <LifetimeMS>800</LifetimeMS>
+        <MultiHit />
+    </Projectile>
+    <Projectile id="3">
+        <ObjectId>GuardShield</ObjectId>
+        <Damage>125</Damage>
+        <Speed>150</Speed>
+        <LifetimeMS>666</LifetimeMS>
+        <MultiHit />
+    </Projectile>
+    <Projectile id="4">
+        <ObjectId>GuardShieldB</ObjectId>
+        <Damage>160</Damage>
+        <Speed>150</Speed>
+        <LifetimeMS>666</LifetimeMS>
+        <MultiHit />
+        <ConditionEffect duration="3">Stun</ConditionEffect>
+        <ConditionEffect duration="3">Slow</ConditionEffect>
+    </Projectile>
+
+    <Behavior map="guard/guardEncounter.jm">PlaceMap</Behavior>
+    <Behaviour>OryxTaunt</Behaviour>
+
+    <!-- Decide Path -->
+    <State id="Ini">
+        <Behaviour altTextureId="1">SetAltTexture</Behaviour>
+        <Transition random="1">pathAngry,pathCalm</Transition>
+    </State>
+
+    <State id="pathCalm">
+        <State id="wait">
+            <Transition playerWithin="6" aftertime="1">raise</Transition>
+        </State>
+        <State id="raise">
+            <Behavior maxSize="140" rate="14">ChangeSize</Behavior>
+            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Embed name="radialBombs"></Embed>
+            <Embed name="radialPara">
+                <Param name="cooldown">0.8</Param>
+            </Embed>
+            <Transition afterTime="10">throwTurrets</Transition>
+        </State>
+        <State id="throwTurrets">
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Embed name="throwMinions"></Embed>
+            <Transition exist="Guard Turret">Turrets</Transition>
+        </State>
+        <State id="Turrets">
+            <Order>
+                <Transition>inwardShoot</Transition>
+            </Order>
+            <Transition afterTime="20">TurretChase</Transition>
+        </State>
+        <State id="Turret Chase">
+            <Order>
+                <Transition>chase</Transition>
+            </Order>
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Transition noneExist="Guard Turret">transition</Transition>
+        </State>
+        <State id="transition">
+            <Embed name="radialPara">
+                <Param name="cooldown">2</Param>
+            </Embed>
+            <Behavior type="targeted" numShots="3" projectileId="1" cooldown="1" angle="10">Shoot</Behavior>
+            <Transition hitpointsLessThan="0.15">rage</Transition>
+            <Transition afterTime="10">throwTurrets</Transition>
+        </State>
+    </State>
+
+    <State id="pathAngry">
+        <State id="wait">
+            <Transition playerWithin="4" aftertime="1">raise</Transition>
+        </State>
+        <State id="raise">
+            <Behavior maxSize="140" rate="28">ChangeSize</Behavior>
+            <Behaviour altTextureId="2">SetAltTexture</Behaviour>
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Embed name="radialBombs"></Embed>
+            <Embed name="radialPara"></Embed>
+            <Transition afterTime="5">throwTurrets</Transition>
+        </State>
+        <State id="throwTurrets">
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Embed name="throwMinions"></Embed>
+            <Embed name="throwShields"></Embed>
+            <Transition exist="Guard Turret,Guard Shield">Turrets</Transition>
+        </State>
+        <State id="Turrets">
+            <Order targetIds="Guard Turret">
+                <Transition>chase</Transition>
+            </Order>
+            <Order targetIds="Guard Shield">
+                <Transition>orbit</Transition>
+            </Order>
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Transition afterTime="15">respawnTurrets</Transition>
+            <Transition noneExist="Guard Turrets">chase</Transition>
+        </State>
+        <State id="respawnTurrets">
+            <Order>
+                <Transition>terminate</Transition>
+            </Order>
+            <Transition>Turrets</Transition>
+        </State>
+        <State id="chase">
+            <Order>
+                <Transition>terminate</Transition>
+            </Order>
+            <Embed name="radialPara">
+                <Param name="cooldown">0.8</Param>
+            </Embed>
+            <Behavior type="targeted" numShots="5" projectileId="3" cooldown="0.6" angle="9">Shoot</Behavior>
+            <Behavior acquireRange="20" bucket="movement" speed="2">Follow</Behavior>
+            <Transition afterTime="15">slashing</Transition>
+        </State>
+        <State name="slashing">
+            <Behavior effect="Armored">ConditionEffect</Behavior>
+            <Behavior type="targeted" numShots="1" projectileId="2" cooldown="0.4">Shoot</Behavior>
+            <Transition afterTime="5">transition</Transition>
+        </State>
+        <State id="transition">
+            <Embed name="radialPara">
+                <Param name="cooldown">2</Param>
+            </Embed>
+            <Behavior type="targeted" numShots="3" projectileId="3" cooldown="0.6" angle="25">Shoot</Behavior>
+            <Embed name="radialBombs"></Embed>
+            <Transition hitpointsLessThan="0.15">rage</Transition>
+            <Transition afterTime="10">chase</Transition>
+        </State>
+    </State>
+
+    <State id="rage">
+        <State name="glow">
+            <Behavior effect="Invulnerable">ConditionEffect</Behavior>
+            <Behavior type="Flash" color="FF2200" flashPeriod="3" flashRepeats="1">ShowEffect</Behavior>
+            <Transition afterTime="3">shoot</Transition>
+        </State>
+        <State id="shoot">
+            <Behavior type="targeted" numShots="5" projectileId="4" cooldown="0.4" angle="9">Shoot</Behavior>
+            <Behavior type="targeted" numShots="1" projectileId="2" cooldown="0.4">Shoot</Behavior>
+            <Transition afterTime="10">safe</Transition>
+        </State>
+        <State id="safe">
+            <Behavior type="Flash" color="00FF22" flashPeriod="2" flashRepeats="2">ShowEffect</Behavior>
+            <Behavior effect="Armored">ConditionEffect</Behavior>
+            <Transition afterTime="5">glow</Transition>
+        </State>
+    </State>
+
+    <DefineEmbed name="radialBombs">
+        <Behavior target="auto" defaultAngle="0" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="36" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="72" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="108" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="144" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="180" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="216" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="252" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="288" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+        <Behavior target="auto" defaultAngle="324" range="2" cooldown="1" damage="200" radius="2">GrenadeToss</Behavior>
+    </DefineEmbed>
+
+    <DefineEmbed name="radialPara">
+        <Behavior type="auto" numShots="36"  projectileId="0" cooldown="{cooldown}" angle="10">Shoot</Behavior>
+    </DefineEmbed>
+
+    <DefineEmbed name="throwMinions">
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="0">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="90">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="180">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="270">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="45">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="135">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="315">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Turret" range="7" defaultAngle="225">ObjectToss</Behavior>
+    </DefineEmbed>
+
+    <DefineEmbed name="throwShields">
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="0">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="90">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="180">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="270">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="45">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="135">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="315">ObjectToss</Behavior>
+        <Behavior type="auto" childId="Guard Shield" range="2" defaultAngle="225">ObjectToss</Behavior>
+    </DefineEmbed>
+</Object>

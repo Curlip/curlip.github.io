@@ -1,0 +1,46 @@
+<Object type="FIX" id="Invi">
+        <Class>Projectile</Class>
+        <Texture>
+            <File>Invisible</File>
+            <Index>0x00</Index>
+        </Texture>
+        <Rotation>0</Rotation>
+        <Size>100</Size>
+</Object>
+
+<Object type="FIX" id="Guard Shield">
+    <Group>Cursed Guard Encounter</Group>
+
+    <Enemy/>
+    <Class>Character</Class>
+    <StasisImmune/>
+
+    <MaxHitPoints>5000</MaxHitPoints>
+    <Defense>10</Defense>
+
+    <AnimatedTexture>
+        <File>FIX</File>
+        <Index>FIX</Index>
+    </AnimatedTexture>
+
+    <!-- Shots -->
+
+    <Projectile id="0">
+        <ObjectId>Invi</ObjectId>
+        <Damage>100</Damage>
+        <Speed>0</Speed>
+        <LifetimeMS>400</LifetimeMS>
+        <MultiHit />
+    </Projectile>
+
+    <Behavior bucket="orders" listenIds="Cursed Guard">FollowOrders</Behavior>
+
+    <State id="Ini"></State>
+    <State id="orbit">
+        <Behavior bucket="movement" protecteeId="Cursed Guard" acquireRange="20" speed=".4" radius="2" speedVariability="0" radiusVariability="0">Orbit</Behavior>
+        <Behavior type="auto" numShots="1"  projectileId="0" cooldown="1" defaultAngle="0">Shoot</Behavior>
+    </State>
+    <State id="terminate">
+        <Behaviour>Decay</Behaviour>
+    </State>
+</Object>
