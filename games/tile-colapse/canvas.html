@@ -37,18 +37,31 @@
         var px = 15;
         var py = 15;
 
-        for(x=0; x<size; x++){
-            board[x] = [];
-            obj[x] = [];
-            for(y=0; y<size; y++){
-                board[x][y] = 1;
-                obj[x][y] = 0;
+        function setup(){
+            board = [];
+            obj = [];
+            frame = 0;
+
+            score = 0;
+            charge = 0;
+            px = 15;
+            py = 15;
+
+            for(x=0; x<size; x++){
+                board[x] = [];
+                obj[x] = [];
+                for(y=0; y<size; y++){
+                    board[x][y] = 1;
+                    obj[x][y] = 0;
+                }
+            }
+
+            for(x=0; x<red; x++){
+                obj[Math.round(Math.random()*grid)][Math.round(Math.random()*grid)] = 1;
             }
         }
 
-        for(x=0; x<red; x++){
-            obj[Math.round(Math.random()*grid)][Math.round(Math.random()*grid)] = 1;
-        }
+        setup();
 
         let id = setInterval(function() {
             frame++;
@@ -156,6 +169,37 @@
                         charge = 0;
                     }
                     break;
+                case 87:
+                    if(board[px][py-1] && py>0 || charge > use) {
+                        py -= 1;
+                        board[px][py] = 1;
+                        charge = 0;
+                    }
+                    break;
+                case 83:
+                    if(board[px][py+1] && py<29 || charge > use){
+                        py += 1;
+                        board[px][py] = 1;
+                        charge = 0;
+                    }
+                    break;
+                case 65:
+                    if(board[px-1][py] && px>0 || charge > use){
+                        px -= 1;
+                        board[px][py] = 1;
+                        charge = 0;
+                    }
+                    break;
+                case 68:
+                    if(board[px+1][py] && px<29 || charge > use){
+                        px += 1;
+                        board[px][py] = 1;
+                        charge = 0;
+                    }
+                    break;
+                case 82:
+                    setup();
+                break;
             }
         }
         </script>
