@@ -84,8 +84,70 @@
 
         var score = 0;          // player score
 
+        var logicID;
+        var renderID;
 
-        logic = setInterval(function() {
+        // SIMPLE LOADING MARKER
+        canv.fillStyle = "white"
+        canv.fillRect(0,0,500,500)
+        canv.font = "50px Arial";
+        canv.fillStyle = "black";
+        canv.textAlign = "center";
+        canv.fillText("Loading...", 250, 250);
+
+        var menuOpacity = 0;
+        var menuUp = false;
+
+        /* MENU */
+        var menu = setInterval(function(){
+            if(overlay.complete && fog.complete && fog2.complete && ground.complete && ship.complete && chargeship.complete && wavemark.complete){
+
+                canv.fillStyle = "white"
+                canv.fillRect(0,0,500,500)
+                canv.globalAlpha = menuOpacity;
+                canv.font = "20px Arial";
+                canv.fillStyle = "black";
+                canv.textAlign = "center";
+                canv.fillText("Press SPACE to Start", 250, 400);
+                canv.globalAlpha = 1;
+
+                if(menuUp) menuOpacity += 0.005;
+                if(!menuUp) menuOpacity -= 0.01;
+                if(menuOpacity > 0.8) menuUp = false;
+                if(menuOpacity < 0.2) menuUp = true;
+
+                if(keyboard.space){
+                    clearInterval(menu);
+                    start();
+                }
+            }
+        }, 1000/60);
+
+        function start(){
+            clearInterval(logicID);
+            clearInterval(renderID);
+
+            x = 250;
+            y = 250;
+            xvel = 0;
+            yvel = 0;
+            health = 100;
+            dead = false;
+            isBoosted = 0;
+            angle = 0;
+            charge = 0;
+            markXSpeed= 3.5;
+            markX = scoreDist;
+            markY = 250;
+            markHit = false;
+            hit = false;
+            score = 0;
+
+            logicID = setInterval(logic, 1000/60);
+            renderID = setInterval(render, 1000/60);
+        }
+
+         function logic() {
             // saves last angle for boost
             if(xvel != 0 || yvel != 0){
                 var mag = Math.sqrt(xvel*xvel + yvel*yvel)
@@ -165,12 +227,12 @@
             /* TEST FOR DEATH */
             if(health <= 0){
                 dead = true;
-                window.clearInterval(logic);
+                window.clearInterval(logicID);
             }
 
-        }, 1000 / 60)
+        }
 
-        render = setInterval(function() {
+        function render() {
             canv.clearRect(0, 0, 500, 500)
 
             /* DRAW BACKGROUND */
@@ -270,13 +332,17 @@
                 }, 1300)
 
                 // Kill normal rendering
-                clearInterval(render)
+                clearInterval(renderID)
             }
-        }, 1000 / 60)
+        }
 
 
         /* CATCH AND HANDLE KEYDOWN EVENTS */
         document.onkeydown = function(eve) {
+            if(eve.keyCode == 82){
+                start();
+            }
+
             keyChange(eve.keyCode, true);
         }
 
