@@ -1,0 +1,335 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+    <div id="canvw">
+        <canvas id="canv" height="500" width="500"></canvas>
+    </div>
+
+    <div id="info">
+        <h1>Beacons</h1>
+        <div style="text-align: center;">
+            Welcome to Space. <br /><br />
+            This is your spaceship. <br /><br />
+            You can fly your spaceship with the <kbd>WASD</kbd> or <kbd>ARROW</kbd> keys. <br /><br />
+            Your ship is fitted with a booster, when charged use <kbd>SPACE</kbd> to activate. <br /><br />
+            Go forth and enjoy the freedom of space. <br />
+        </div>
+        <p>
+            <sub><i>Due to recently passed legislation (56.7a) you are now mandated to fly through beacons. We advise that failure to enter a beacon at the gate will result in the the malfunction of your onboard electronics as well as a heavy fine. We also advise that excess fines have been recorded to "fine people out of existence".  </i></sub>
+        </p>
+        <footer>
+            <p>By <a href="https://curlip.github.io/">Curlip</a></p>
+        </footer>
+    </div>
+
+    <script>
+        var c = document.getElementById('canv')
+        var canv = c.getContext('2d')
+
+        /* IMAGES */
+        const overlay = new Image();
+        overlay.src = 'sprite/blind-img.png';
+        const fog = new Image();
+        fog.src = 'sprite/fog.png';
+        const fog2 = new Image();
+        fog2.src = 'sprite/fog2.png';
+        const ground = new Image();
+        ground.src = 'sprite/ground.png';
+        const ship = new Image();
+        ship.src = 'sprite/ship.png';
+        const chargeship = new Image();
+        chargeship.src = 'sprite/charge.png';
+        const wavemark = new Image();
+        wavemark.src = 'sprite/wavemark.png';
+
+        /* GAME CONSTANTS */
+        const speed = 0.55;         //Player Velocity per frame
+        const decay = 1.05;         //Player speed lost per frame (speed / decay)
+        const scrollFactor = 2;     //Amount to scroll backgroud
+        const boostFactor = 10;     //Speed on boost (Speed = Speed + Boost)
+        const scoreDist = 600;      //Distance between markers
+
+        // Keyboard Movement Tracking
+        var keyboard = {
+            up: false,
+            down: false,
+            left: false,
+            right: false,
+            space: false
+        }
+
+        /* PLAYER VARIABLES */
+        var x = 250;            // x position
+        var y = 250;            // y position
+        var xvel = 0;           // x Velocity
+        var yvel = 0;           // y Velocity
+        var health = 100;       // player health, dead if less than 0
+        var dead = false;       // is the player dead
+        var isBoosted = 0;     // is the player boosted, used for graphics
+        var angle = 0;          // players current angle, used for boost/graphics
+        var charge = 0;         // current charge, can boost at 120
+
+
+        /* GAME VARIABLES */
+        var markXSpeed= 3.5;    // speed of mark
+        var markX = scoreDist;  // x position of mark
+        var markY = 250;          // y position of mark
+
+        var markHit = false;    // did player hit mark (objective)
+        var hit = false;        // has player hit something
+
+        var score = 0;          // player score
+
+
+        logic = setInterval(function() {
+            // saves last angle for boost
+            if(xvel != 0 || yvel != 0){
+                var mag = Math.sqrt(xvel*xvel + yvel*yvel)
+                var xdir = xvel / mag;
+                var ydir = yvel / mag;
+                angle = Math.atan2(ydir, xdir)
+            }
+
+            // Test if player is going faster than is possible without boost
+            if(Math.sqrt(xvel*xvel + yvel*yvel) > 5){
+                isBoosted = true;
+            }else{
+                isBoosted = false;
+            }
+
+            /* HANDLE KEYBOARD */
+            if (keyboard.up && yvel <= 3 && yvel >= -3)  yvel += speed;
+            if (keyboard.down && yvel <= 3 && yvel >= -3) yvel -= speed;
+            if (keyboard.right && xvel <= 3 && xvel >= -3) xvel += speed;
+            if (keyboard.left && xvel <= 3 && xvel >= -3) xvel -= speed;
+
+            if (!keyboard.left) xvel /= decay;
+            if (!keyboard.right) xvel /= decay;
+            if (!keyboard.up) yvel /= decay;
+            if (!keyboard.down) yvel /= decay;
+
+            /* HANDLE BOOST */
+            if (keyboard.space && charge > 120) {
+                charge=120;
+
+                // Make Charge decend nicely by easing down
+                setIntervalX(function(){
+                    charge-=4;
+                    console.log(charge);
+                }, 1, 30)
+
+                xvel += Math.cos(angle) * boostFactor;
+                yvel += Math.sin(angle) * boostFactor;
+            }
+
+            /* MOVEMENT AND BOUNDRY CHECKS */
+            x += xvel;
+            y += yvel;
+
+            if(x > 500) x=500;
+            if(x < 50) x=50;
+            if(y > 500) y=500;
+            if(y < 0) y=0;
+
+            /* TEST IF MARK HIT */
+            if(x > markX && !hit){
+                hit = true;
+                if(y < markY + 30 && y > markY - 30){
+                    markHit = true;
+                    score++
+                }else{
+                    setIntervalX(function(){
+                        health--;
+                    }, 30, 20)
+                }
+            }
+
+            /* RESET MARK */
+            if(markX < 0){
+                markX = scoreDist;
+                markXSpeed += 0.1;
+                markY = Math.random()*400 + 50;
+
+                markHit = false;
+                hit = false;
+            }
+
+            /* INCREMENT CHARGE AND MARK POSITION */
+            charge++;
+            markX-=markXSpeed;
+
+            /* TEST FOR DEATH */
+            if(health <= 0){
+                dead = true;
+                window.clearInterval(logic);
+            }
+
+        }, 1000 / 60)
+
+        render = setInterval(function() {
+            canv.clearRect(0, 0, 500, 500)
+
+            /* DRAW BACKGROUND */
+            canv.drawImage(ground, (-x*0.05*scrollFactor)-50, (-y*0.05*scrollFactor)-50,600,600);
+
+            /* DRAW BLOCKED AREA */
+            canv.fillStyle = "rgba(0,0,0,0.1)"
+            canv.fillRect(0,0,50,500);
+
+            /* DRAW SHIP */
+            canv.save();
+                canv.translate(x,y);                // translate for ship drawing to allow rotation
+                canv.rotate( angle + Math.PI/2 );   // rotate for ship drawing
+                canv.drawImage(ship,-10,-9);        // draw at origin which is at ships position
+
+                /* SPEED OVERLAY */
+                canv.globalAlpha = Math.abs(0.1 * Math.sqrt(xvel*xvel + yvel*yvel));
+
+                // Brighten overlay if boosting
+                if(isBoosted){
+                    canv.globalCompositeOperation = "lighter"
+                    canv.globalAlpha *= 1.25;
+                }
+
+                canv.drawImage(chargeship, -10,-12);
+                canv.globalAlpha = 1.0;
+                canv.globalCompositeOperation = "source-over"
+            canv.restore();
+
+
+            /* DRAW MARK */
+
+            canv.strokeStyle = "rgba(0,0,0,0.7)"
+
+            if(!markHit && hit) canv.strokeStyle = "rgba(255,50,50,0.4)";  // Change color of panel if hit
+
+            canv.beginPath()
+                canv.moveTo(markX, 0);
+                canv.lineTo(markX, 500);
+            canv.stroke();
+
+            if(markHit) canv.globalAlpha = 0.2;                         // Fade mark if hit
+            canv.drawImage(wavemark, markX-16, markY - 16, 32,32);
+            canv.globalAlpha = 1;
+
+            /* DRAW FOG */
+            canv.drawImage(fog, (-x*0.2*scrollFactor)-100, (-y*0.2*scrollFactor)-100,1000,1000);
+            canv.drawImage(fog2, (-x*0.4*scrollFactor)-100, (-y*0.4*scrollFactor)-100,1000,1000);
+
+            /* DRAW SHADOW */
+
+            var overlayOffset = 250;
+            var shadowX = Math.round(x - xvel * 2);
+            var shadowY = Math.round(y - yvel * 2);
+
+            var shadowOpacity = 0.8 - health / 80
+            if(shadowOpacity > 1) shadowOpacity = 1;
+            if(shadowOpacity < 0) shadowOpacity = 0;
+
+            canv.globalAlpha = shadowOpacity;
+            canv.fillStyle = "rgba(0,0,0,1)"
+            canv.drawImage(overlay, shadowX - overlayOffset, shadowY - overlayOffset);
+            canv.fillRect(0, 0, shadowX - overlayOffset, 500)                                       //LEFT
+            canv.fillRect(shadowX + overlayOffset, 0, 500, 500)                                     //RIGHT
+            canv.fillRect(shadowX - overlayOffset, 0, overlayOffset*2, shadowY - overlayOffset)     //TOP
+            canv.fillRect(shadowX - overlayOffset, shadowY + overlayOffset, overlayOffset*2, 500)
+            canv.globalAlpha = 1;
+
+            /* DRAW UI */
+            canv.fillStyle = "lime"                         //Charge Bar
+            canv.fillRect(0, 0, 500 / 120 * charge, 2)
+
+            canv.fillStyle = "red"                          //HP Bar
+            canv.fillRect(0, 498, 5 * health, 2)
+
+            /* DEATH ANIMATION */
+            if(dead){
+
+                canv.globalAlpha = 0.025;
+
+                //Fade to white
+                setIntervalX(function(){
+                    canv.globalCompositeOperation = "lighter"
+                    canv.fillStyle = "white"
+                    canv.fillRect(0,0,500,500);
+                }, 20, 100)
+
+                // Schedual score Fade in
+                setTimeout(function(){
+                    setIntervalX(function(){
+                        canv.globalCompositeOperation = "source-over"
+                        canv.font = "60px Arial";
+                        canv.fillStyle = "black";
+                        canv.textAlign = "center";
+                        canv.fillText((score == 1 ? score + " Point" : score + " Points"), 250, 250);
+                    }, 10, 100)
+                }, 1300)
+
+                // Kill normal rendering
+                clearInterval(render)
+            }
+        }, 1000 / 60)
+
+
+        /* CATCH AND HANDLE KEYDOWN EVENTS */
+        document.onkeydown = function(eve) {
+            keyChange(eve.keyCode, true);
+        }
+
+        document.onkeyup = function(eve) {
+            keyChange(eve.keyCode, false);
+        }
+
+        /* HANDLE KEY EVENTS */
+        function keyChange(code, state) {
+            switch (code) {
+                case 38:
+                    keyboard.down = state;
+                    break;
+                case 40:
+                    keyboard.up = state;
+                    break;
+                case 37:
+                    keyboard.left = state;
+                    break;
+                case 39:
+                    keyboard.right = state;
+                    break;
+                case 87:
+                    keyboard.down = state;
+                    break;
+                case 83:
+                    keyboard.up = state;
+                    break;
+                case 65:
+                    keyboard.left = state;
+                    break;
+                case 68:
+                    keyboard.right = state;
+                    break;
+                case 32:
+                    keyboard.space = state;
+                    break;
+            }
+        }
+
+        /* EXTENDED SET INTERVAL FUNCTION */
+        function setIntervalX(callback, delay, repetitions) {
+            var x = 0;
+            var intervalID = window.setInterval(function () {
+
+               callback();
+
+               if (++x === repetitions) {
+                   window.clearInterval(intervalID);
+               }
+            }, delay);
+        }
+    </script>
+</body>
+
+</html>
