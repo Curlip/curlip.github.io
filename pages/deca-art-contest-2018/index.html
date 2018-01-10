@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/basic.css">
+        <link rel="stylesheet" type="text/css" href="../css/layout.css">
+        <link rel="stylesheet" type="text/css" href="../css/table.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head> 
+    <body>
+        <article>
+            <header>
+                <h1>Deca Art Contest 2018</h1>
+            </header>
+            <p>
+            Please see attached my <a href="https://www.reddit.com/r/RotMG/comments/7ocbxz/rotmg_january_2018_art_contest/">DECA Art Contest 2018 submissions.</a>
+            </p>
+
+            <h2>Item</h2>
+            <a name="item"></a>
+            <img src="./assets/bow@140px.png" />
+            <blockquote>Scavengers see a glow in the dark. A strange wood that whispers when touched. Hoping to profit they sell the wood to a bowyer. How you found it where you did is a mystery...</blockquote>
+            <p>
+                When I set out to create this bow it was originally two pieces of wood twisted together. However due to that not having the "UT" feeling, and because the sprite looked "noisy" the idea evolved. It evolved into that of a magical, glowing, material bound to a string by wooden fasteners.
+            </p>
+
+            <h2>Enemy</h2>
+            <a name="enemy"></a>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stand</th>
+                        <th>Walk</th>
+                        <th>Attack (16x8) </th>
+                        <tr>
+                </thead>
+                <tr>
+                    <td> <img src="./assets/enemy-front-stand.gif" / > </td>
+                    <td> <img src="./assets/enemy-front-walk.gif" / > </td>
+                    <td> <img src="./assets/enemy-front-attack.gif" / > </td>
+                </tr>
+                <tr>
+                    <td> <img src="./assets/enemy-side-stand.gif" / > </td>
+                    <td> <img src="./assets/enemy-side-walk.gif" / > </td>
+                    <td> <img src="./assets/enemy-side-attack.gif" / > </td>
+                </tr>
+                <tr>
+                    <td> <img src="./assets/enemy-back-stand.gif" / > </td>
+                    <td> <img src="./assets/enemy-back-walk.gif" / > </td>
+                    <td> <img src="./assets/enemy-back-attack.gif" / > </td>
+                </tr>    
+            </table>
+
+            <blockquote>One day a powerful mage was traveling. He entered a cavern when a storm struck, he found  a room of tresure. A single blue helmet, he placed upon his head. The gem on the helmet flashed, his mind became bent, and his flesh decayed away...  </blockquote>
+            <p> Originally this character was going to be one of mystery, with very little of his face showing. But I found the more of the skintone I added the more the skin began to make sense. I came to a final design quite quickly, and spent the majority of the time tuning the animations, especially that of the side-attack view and of the robe walking. </p>
+
+            <h3>XML</h3>
+
+            <p> Early on, almost as soon as I added the gem I decided that I would really like to have the gem on the enemy represent its state. Luckily this can be done with the <code>setAltTexture</code> behaviour. I am undure how this would work for an enemy with attacking and walking animations however. You can see the revelevant XML to make the gifs below. </p>
+
+            <pre><code id="enemy-xml" class="xml">
+...
+
+&lt;State id=&quot;gem-green&quot;&gt;
+    &lt;Behavior altTextureId=&quot;1&quot;&gt;SetAltTexture&lt;/Behavior&gt;
+    &lt;Transition afterTime=&quot;0.6&quot;&gt;gem-red&lt;/Transition&gt;
+&lt;/State&gt;
+&lt;State id=&quot;gem-red&quot;&gt;
+    &lt;Behavior altTextureId=&quot;2&quot;&gt;SetAltTexture&lt;/Behavior&gt;
+    &lt;Transition afterTime=&quot;0.6&quot;&gt;gem-purple&lt;/Transition&gt;
+&lt;/State&gt;
+&lt;State id=&quot;gem-purple&quot;&gt;
+    &lt;Behavior altTextureId=&quot;3&quot;&gt;SetAltTexture&lt;/Behavior&gt;
+    &lt;Transition afterTime=&quot;0.6&quot;&gt;gem-blue&lt;/Transition&gt;
+&lt;/State&gt;
+&lt;State id=&quot;gem-blue&quot;&gt;
+    &lt;Behavior altTextureId=&quot;4&quot;&gt;SetAltTexture&lt;/Behavior&gt;
+    &lt;Transition afterTime=&quot;0.6&quot;&gt;gem-green&lt;/Transition&gt;
+&lt;/State&gt;
+
+...
+            </code></pre>
+
+            <footer>
+                <a href="https://curlip.github.io/">Curlip @ Github Pages</a>
+            </footer>
+        </article>
+    </body> 
+
+</html>
