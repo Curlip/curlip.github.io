@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="../styles/basic.css" rel="stylesheet" type="text/css" />
+        <link href="../styles/layout.css" rel="stylesheet" type="text/css" />
+        <link href="../styles/table.css" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/routeros.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+        <title>The Overseer</title>
+    </head>
+    <body>
+        <article>
+            <header>
+                <h1> Formless Minions </h1>
+            </header>
+
+            <img src="formlessminionbase.png" width="280" height="280" />
+            <blockquote style="letter-spacing: 1px;">zzzzzZZZZZzzzz</blockquote>
+            <p>
+                Strange Creatures, they seem to buzz.
+            </p>
+
+            <h2> Stats </h2>
+            <p>
+                <b>HP:</b> 3,000 <br />
+                <b>DEF:</b> 15 <br /><br />
+            </p>
+
+            <h2>Description</h2>
+            <p>
+                A curious creature, the seem powerless without one to protect. They will charge toward their master, and, upon receiving commands, will transform into a for in which they will be able to best complete their commands.
+            </p>
+
+            <h2> Shots </h2>
+            <table>
+                <thead>
+                    <th>Projectile</th>
+                    <th>Damage</th>
+                    <th>Effect</th>
+                    <th>Range</th>
+                    <th>Speed</th>
+                    <th>Comments</th>
+                <thead>
+                <tbody>
+                    <tr>
+                        <td><img src="formlessbolt.png"></td>
+                        <td>100</td>
+                        <td>-</td>
+                        <td>5 Tiles</td>
+                        <td>1.5 Tile/sec</td>
+                        <td><i>Formless Bolts</i></td>
+                    </tr>
+
+                    <tr>
+                        <td><img src="magicdischargeyellow.png"></td>
+                        <td>0</td>
+                        <td>Quiet for 1 second</td>
+                        <td>5 Tiles</td>
+                        <td>1 Tile/sec</td>
+                        <td><i>Formless Yellow Discharge</i></td>
+                    </tr>
+                    <tr>
+                        <td><img src="magicdischargeblue.png"></td>
+                        <td>0</td>
+                        <td>Blind for 5 seconds</td>
+                        <td>5 Tiles</td>
+                        <td>1 Tile/sec</td>
+                        <td><i>Formless Blue Discharge</i></td>
+                    </tr>
+                    <tr>
+                        <td><img src="magicdischargegreen.png"></td>
+                        <td>Slowed for 2 seconds</td>
+                        <td>-</td>
+                        <td>5 Tiles</td>
+                        <td>1 Tile/sec</td>
+                        <td><i>Formless Green Discharge</i></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Phases</h2>
+            <p>
+                The minions charge towards The Overseer, upon reaching him they will transform into one of the roles below.
+            </p>
+
+            <h2>Roles</h2>
+            <h3>Formless Defender</h3>
+            <p>
+                The formless defender has a 60% chance of occurring. The defender is simply a shield around The Overseer. It will swarm around The Overseer to prevent non-piercing damage.
+            </p>
+            <h3>Formless Warrior</h3>
+            <p>
+                The formless warrior has a 30% chance of spawning, it will orbit The Overseer at ~8 tiles and will chase any player after they come within range. They fire out Formless Bolts which cause high damage if you are swarmed.
+            </p>
+            <h3>Formless Mage</h3>
+            <p>
+                The formless warrior has a 10% chance of spawning, it will orbit The Overseer at ~8 tiles and will run to and circle any player it comes near. Once it has a target it will begin shooting out sets of 3 Magic Discharges one at a time. These are the ones you want to focus down, their debilitating status effects won't kill you, but they will aid in your death.
+            </p>
+
+
+            <footer>
+                <a href="https://curlip.github.io/">Curlip @ Github Pages</a>
+            </footer>
+        </article>
+    </body>
+</html>
